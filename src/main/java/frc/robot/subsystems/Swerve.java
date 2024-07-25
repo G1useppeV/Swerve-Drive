@@ -4,22 +4,32 @@
 
 package frc.robot.subsystems;
 
+import java.beans.Encoder;
+
+//import com.ctre.phoenix6.hardware.CANcoder;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.RobotContainer;
 import frc.robot.SwerveModule;
 
+
 public class Swerve extends SubsystemBase {
-SwerveModule frontLeftModule = new SwerveModule(0,1);
-SwerveModule frontRightModule = new SwerveModule(2,3);
-SwerveModule backLeftModule = new SwerveModule(4,5);
-SwerveModule backRightModule = new SwerveModule(6,7);
+  
+
+SwerveModule frontLeftModule = new SwerveModule(0,1, 10,11);
+SwerveModule frontRightModule = new SwerveModule(2,3,12,13);
+SwerveModule backLeftModule = new SwerveModule(4,5,14,15);
+SwerveModule backRightModule = new SwerveModule(6,7,16,17);
 
 // Locations for the swerve drive modules relative to the robot center.
 double chassisWidth = 1.75; // should be in meters
@@ -37,12 +47,10 @@ frontRightLocation,
 backLeftLocation,
 backRightLocation
 );
-private final CommandXboxController red1;
+
 
   /** Creates a new SwerveDrive. */
-  public Swerve(CommandXboxController controller) {
-    red1 = controller;
-  }
+  public Swerve() {}
 
   public void setChassisSpeed(ChassisSpeeds desired){
 SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(desired); // converts the desired speed into array of module states
@@ -58,9 +66,9 @@ backRightModule.setState(newStates[3]);
     // obtains the parameters for the robot to swerve drive 
     // ChassisSpeeds class requires three paramters: vx, vy, omega, 
     ChassisSpeeds newDesiredSpeed = new ChassisSpeeds(
-  -red1.getLeftY(),
-  -red1.getLeftX(),
-  -red1.getRightX() // rotate
+  -RobotContainer.red1.getLeftY(),
+  -RobotContainer.red1.getLeftX(),
+  -RobotContainer.red1.getRightX() // rotate
     );
    
 
@@ -68,6 +76,8 @@ setChassisSpeed(newDesiredSpeed);
 
 // simulates robot in advantage scope
     double loggingState[] = {
+      
+
       frontLeftModule.getState().angle.getDegrees(),
       frontLeftModule.getState().speedMetersPerSecond,
       frontRightModule.getState().angle.getDegrees(),
@@ -78,6 +88,9 @@ setChassisSpeed(newDesiredSpeed);
       backRightModule.getState().speedMetersPerSecond,
     
     };
+    
+  SmartDashboard.putNumber("Left Encoder", frontLeftModule.getLeftDistanceInch());
 SmartDashboard.putNumberArray("SwerveModuleStates",loggingState);
+
   }
 }
