@@ -90,7 +90,6 @@ setChassisSpeed(newDesiredSpeed);
     };
     
   SmartDashboard.putNumber("Left Encoder", frontLeftModule.getLeftDistanceInch());
-SmartDashboard.putNumberArray("SwerveModuleStates",loggingState);
 
   }
 }
