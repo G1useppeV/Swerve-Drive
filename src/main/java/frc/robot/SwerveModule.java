@@ -10,52 +10,44 @@ import com.ctre.phoenix6.sim.CANcoderSimState;
   import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
       public class SwerveModule extends SubsystemBase{
-      private TalonFX angleMotor;
-    private TalonFX driveMotor;
-    private SwerveModuleState currentState;
-    private  CANcoder driveEncoder;
-    private CANcoder angleEncoder; // learn how to do
-    CANcoderSimState driveEncoderSim;
-    CANcoderSimState angleEncoderSim;
+        public int moduleNumber;
+        private Rotation2d angleOffset;
+    
+        private TalonFX mAngleMotor;
+        private TalonFX mDriveMotor;
+        private CANcoder angleEncoder;
+        public SwerveModuleState currentState;
 
-  public SwerveModule(int angleMotorPort,int driveMotorPort, int driveEncoderPort, int angleEncoderPort){
-driveMotor = new TalonFX(driveMotorPort); 
-angleMotor = new TalonFX(angleMotorPort);
-driveEncoder = new CANcoder(driveEncoderPort);
-angleEncoder = new CANcoder(angleEncoderPort);
-currentState = new SwerveModuleState();
+  public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
+    this.moduleNumber = moduleNumber;
+    this.angleOffset = moduleConstants.angleOffset;
 
-var talonFXSim = m_talonFX.getSimState();
-// get encoder sim states
+    mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
+    mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+    angleEncoder = new CANcoder(moduleConstants.canCoderID);
+    currentState = new SwerveModuleState();
 
-//  angleEncoderSim = angleEncoder.getSimState();
+
 
   }
 
 
   public void resetToAbsolute(){
     double absolutePosition = getCANcoder().getRotations() - angleOffset.getRotations();
-    angleMotor.setPosition(absolutePosition);
+    mAngleMotor.setPosition(absolutePosition);
 }
 public Rotation2d getCANcoder(){
         return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue());
-    }
+    } 
 
-  public double getLeftDistanceInch() {
-    return driveEncoder.getPosition().getValueAsDouble();
-  }
+
 public SwerveModuleState getState(){
-  return currentState;
+  return new SwerveModuleState(mDriveMotor.getVelocity().getValue(), Rotation2d.fromRotations(mAngleMotor.getPosition().getValue()));
 }
 
-// not too sure what this methods does
+
 public void setState(SwerveModuleState newState){
   currentState = newState;
-}
-
-@Override
-public void periodic() {
-
 }
 
 }
