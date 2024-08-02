@@ -77,16 +77,6 @@ public SwerveModuleState[] getModuleStates(){
 
   @Override
   public void periodic() {
-    // obtains the parameters for the robot to swerve drive 
-    // ChassisSpeeds class requires three paramters: vx, vy, omega, 
-    ChassisSpeeds newDesiredSpeed = new ChassisSpeeds(
-  -RobotContainer.red1.getLeftY(),
-  -RobotContainer.red1.getLeftX(),
-  -RobotContainer.red1.getRightX() // rotate
-    );
-   
-
-setChassisSpeed(newDesiredSpeed);
 
 // simulates robot in advantage scope
  
